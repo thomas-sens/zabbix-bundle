@@ -14,7 +14,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('zabbix');
+        $treeBuilder = new TreeBuilder('flowti_zabbix');
 
         $treeBuilder->getRootNode()
         ->children()
