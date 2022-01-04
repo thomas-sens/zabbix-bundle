@@ -21,6 +21,7 @@ class FlowtiZabbixClient
             $this->grava_log("Login\n" ,'endpoint-zabbix.log');
 
             $this->zabbix_rest_endpoint_user = $parameter->get('flowti_zabbix.client.username');
+            dd($parameter->get('flowti_zabbix.client.username'));
             $this->zabbix_rest_endpoint_pass = $parameter->get('flowti_zabbix.client.password');
             $this->zabbix_rest_endpoint = $parameter->get('flowti_zabbix.client.host');
         }
