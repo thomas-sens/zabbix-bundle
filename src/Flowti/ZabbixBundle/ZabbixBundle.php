@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Flowti\ZabbixBundle;
+namespace Flowti\ZabbixBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
