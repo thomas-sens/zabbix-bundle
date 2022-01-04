@@ -1,5 +1,5 @@
 {
-    "name": "flowti/zabbix-bundle",
+    "name": "thomas-sens/zabbix-bundle",
     "description": "Zabbix integration for Symfony",
     "type": "symfony-bundle",
     "require": {
