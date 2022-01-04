@@ -8,11 +8,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class FlowtiZabbixClient
     {
-        protected $zbClient;
-        protected $zabbix_rest_endpoint_user;
-        protected $zabbix_rest_endpoint_pass;
-        protected $token_auth;
-        protected $zabbix_rest_endpoint;
+        private $zbClient;
+        private $zabbix_rest_endpoint_user;
+        private $zabbix_rest_endpoint_pass;
+        private $token_auth;
+        private $zabbix_rest_endpoint;
 
         public function __construct(ParameterBagInterface $parameter)
         {
