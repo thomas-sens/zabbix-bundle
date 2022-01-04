@@ -1,8 +1,8 @@
 # config/services.yaml
 services:
-  zabbix_security_headers.response_subscriber:
-    class: Flowti\ZabbixBundle\EventSubscriber\ResponseSubscriber
-    arguments:
-      $parameterBag: "@parameter_bag"
-    tags:
-      - { name: kernel.event_subscriber }
+    zabbix_security_headers.response_subscriber:
+        class: Flowti\ZabbixBundle\EventSubscriber\ResponseSubscriber
+        arguments:
+            $parameterBag: "@parameter_bag"
+        tags:
+            - { name: kernel.event_subscriber }
