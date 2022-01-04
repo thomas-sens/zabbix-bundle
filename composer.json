@@ -1,0 +1,21 @@
+{
+    "name": "flowti/zabbix-bundle",
+    "description": "Zabbix integration for Symfony",
+    "type": "symfony-bundle",
+    "require": {
+        "php": ">=7.4",
+        "symfony/framework-bundle": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flowti\\ZabbixBundle\\": "src/"
+        }
+    },  
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Alexandre Sens",
+            "email": "thomas.sens@gmail.com"
+        }
+    ]
+}
