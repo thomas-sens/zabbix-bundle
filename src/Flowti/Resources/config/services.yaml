@@ -1,0 +1,5 @@
+services:
+  zabbix_security_headers.response_subscriber:
+    class: Flowti\ZabbixBundle\EventSubscriber\ResponseSubscriber
+    tags:
+      - { name: kernel.event_subscriber }
