@@ -8,7 +8,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Flowti\\ZabbixBundle\\": "src/"
+            "Flowti\\ZabbixBundle\\": "src/Flowti/"
         }
     },  
     "license": "MIT",
