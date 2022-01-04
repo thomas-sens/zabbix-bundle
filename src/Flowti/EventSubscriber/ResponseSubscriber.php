@@ -11,12 +11,12 @@ class ResponseSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::RESPONSE => [
-                ['addSecurityHeaders', 0],
+                ['addZabbix', 0],
             ],
         ];
     }
 
-    public function addSecurityHeaders(ResponseEvent $event)
+    public function addZabbix(ResponseEvent $event)
     {
         $response = $event->getResponse();
         $response->headers->set('X-Header-Set-By', 'My custom bundle');
