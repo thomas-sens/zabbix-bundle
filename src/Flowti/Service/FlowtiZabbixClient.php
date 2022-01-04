@@ -4,26 +4,25 @@
 
     use Symfony\Component\DependencyInjection\ContainerInterface;
     use GuzzleHttp\Client as GClient;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-    class FlowtiZabbixClient
+class FlowtiZabbixClient
     {
         protected $zbClient;
         protected $zabbix_rest_endpoint_user;
         protected $zabbix_rest_endpoint_pass;
-        protected $container;
         protected $token_auth;
         protected $zabbix_rest_endpoint;
 
-        public function __construct(ContainerInterface $container)
+        public function __construct(ParameterBagInterface $parameter)
         {
-            $this->container = $container;
             $this->zbClient = new GClient(['verify' => false]);
             $this->token_auth = $this->logIn(); 
             $this->grava_log("Login\n" ,'endpoint-zabbix.log');
 
-            $this->zabbix_rest_endpoint_user = $this->container->getParameter('flowti_zabbix.client.username');
-            $this->zabbix_rest_endpoint_pass = $this->container->getParameter('flowti_zabbix.client.password');
-            $this->zabbix_rest_endpoint = $this->container->getParameter('flowti_zabbix.client.host');
+            $this->zabbix_rest_endpoint_user = $parameter->get('flowti_zabbix.client.username');
+            $this->zabbix_rest_endpoint_pass = $parameter->get('flowti_zabbix.client.password');
+            $this->zabbix_rest_endpoint = $parameter->get('flowti_zabbix.client.host');
         }
 
         public function __destruct()

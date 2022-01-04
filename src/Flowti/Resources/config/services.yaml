@@ -9,4 +9,4 @@
 services:
     Flowti\ZabbixBundle\Service\FlowtiZabbixClient:
         public: true
-        arguments: ['@service_container']
+        arguments: ['@parameter_bag']
