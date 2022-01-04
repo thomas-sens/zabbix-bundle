@@ -15,26 +15,24 @@
         public function __construct(ContainerInterface $container)
         {
             $this->container  = $container;
-            $this->httpClient = HttpClient::create([
-                'headers' => [
-                    'Content-Type' => 'application/json-rpc',
-                ]
-            ]);
+            $this->zbClient = new GClient(['verify' => false]);
+            $this->token_auth = $this->logIn();
+            $this->grava_log("Login\n" ,'endpoint-zabbix.log');
 
-            $this->zabbixCredentialsHost     = $this->container->getParameter('flowti_zabbix.client.host');
-            $this->zabbixCredentialsUsername = $this->container->getParameter('flowti_zabbix.client.username');
-            $this->zabbixCredentialsPassword = $this->container->getParameter('flowti_zabbix.client.password');
+            $this->zabbix_rest_endpoint_user = $this->container->getParameter('flowti_zabbix.client.username');
+            $this->zabbix_rest_endpoint_pass = $this->container->getParameter('flowti_zabbix.client.password');
+            $this->zabbix_rest_endpoint = $this->container->getParameter('flowti_zabbix.client.host');
         }
 
         public function __destruct()
         {
-            $this->funcoes->grava_log("Logout\n" ,'endpoint-zabbix.log');
+            $this->grava_log("Logout\n" ,'endpoint-zabbix.log');
             $this->logOut();
         }
     
         private function callEndpoint($method, $params) {
             $authToken = '"id": 0';
-            $this->funcoes->grava_log("$method\n" ,'endpoint-zabbix.log');
+            $this->grava_log("$method\n" ,'endpoint-zabbix.log');
             if ($this->token_auth) {
                 $authToken = '"id": 1, "auth": "'.$this->token_auth.'"';
             }
@@ -53,10 +51,10 @@
             $ret = json_decode($response->getBody()->getContents(),true);
     
             if (!$response->getStatusCode()=='200') {
-                $this->funcoes->grava_log("ERRO: $method ".$response->getStatusCode()."\n" ,'endpoint-zabbix.log');
+                $this->grava_log("ERRO: $method ".$response->getStatusCode()."\n" ,'endpoint-zabbix.log');
             }
             if (isset($ret['error'])) {
-                $this->funcoes->grava_log("ERRO $method: ".$ret['error']['message'].' - '.$ret['error']['data']."\n" ,'endpoint-zabbix.log');
+                $this->grava_log("ERRO $method: ".$ret['error']['message'].' - '.$ret['error']['data']."\n" ,'endpoint-zabbix.log');
             }
     
             if (isset($ret['result'])) return $ret['result'];
@@ -123,4 +121,33 @@
             }
         }
 
+        function grava_log($msg, $arquivo, $blClean=false){
+            //pega o path completo
+            $caminho_atual = getcwd();
+            //muda o contexto de execução para a pasta logs
+            $dir = $caminho_atual."/../var/log";
+            if (!file_exists($dir)){
+                mkdir($dir, 0700);
+            }
+            chdir($dir);
+            if (!file_exists($arquivo)) {
+                $ponteiro = fopen($arquivo, "a+b");
+                fclose($ponteiro);
+            }
+            $data = date("d/m/y");
+            $hora = date("H:i:s");
+            $ips = $_SERVER['REMOTE_ADDR'];
+            $cabecalho = "\n###### INÍCIO [$data $hora] $ips ######\n";
+            $rodape = "###### FIM ######\n";
+            
+            if ($blClean) {
+                $file_data = $msg;
+            } else {
+                $file_data = $cabecalho.$msg.$rodape;
+            }
+    
+            file_put_contents($arquivo, $file_data, FILE_APPEND);
+    
+            chdir($caminho_atual);
+        }
     }
