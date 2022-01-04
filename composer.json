@@ -1,17 +1,10 @@
 {
     "name": "flowti/zabbix-bundle",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/thomas-sens/zabbix-bundle.git"
-        }
-    ],
     "description": "Zabbix integration for Symfony",
     "type": "symfony-bundle",
     "require": {
         "php": ">=7.4",
-        "symfony/framework-bundle": "^5.2",
-        "flowti/zabbix-bundle": "dev-master"
+        "symfony/framework-bundle": "^5.2"
     },
     "autoload": {
         "psr-4": {
