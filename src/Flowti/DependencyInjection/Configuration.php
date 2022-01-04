@@ -17,11 +17,15 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('flowti_zabbix');
 
         $treeBuilder->getRootNode()
-            ->children()
-            ->scalarNode('zabbix_rest_endpoint')->end()
-            ->scalarNode('zabbix_rest_endpoint_user')->end()
-            ->scalarNode('zabbix_rest_endpoint_pass')->end()
-            ->end();
+        ->children()
+        ->arrayNode('client')->addDefaultsIfNotSet()->info('Client related information for accessing the Zabbix API')
+        ->children()
+        ->scalarNode('host')->cannotBeEmpty()->defaultValue('https://your-zabbix-server/zabbix/api_jsonrpc.php')->info('Endpoint for the Zabbix Server API')->example('https://example.com/zabbix/api_jsonrpc.php')->end()
+        ->scalarNode('username')->cannotBeEmpty()->defaultValue('guest')->info('Username of user with access to zabbix server')->example('guest')->end()
+        ->scalarNode('password')->defaultValue('')->info('Password of user with access to zabbix server')->example('p@ssw0rd!')->end()
+        ->end()
+        ->end() // client
+        ->end();
 
         return $treeBuilder;
     }
