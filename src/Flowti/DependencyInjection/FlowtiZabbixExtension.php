@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 /**
  * ZabbixExtension
  */
-class ZabbixExtension extends ConfigurableExtension
+class FlowtiZabbixExtension extends ConfigurableExtension
 {
     public function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
