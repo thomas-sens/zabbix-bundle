@@ -5,7 +5,7 @@
     use Symfony\Component\DependencyInjection\ContainerInterface;
     use Symfony\Component\HttpClient\HttpClient;
 
-    class AmacadoZabbixClient
+    class FlowtiZabbixClient
     {
         protected $httpClient;
         protected $zabbixCredentialsHost;
