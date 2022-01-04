@@ -19,7 +19,6 @@ class FlowtiZabbixClient
     public function __construct(ParameterBagInterface $parameter, LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->logger->info('Login');
         $this->zabbix_rest_endpoint_user = $parameter->get('flowti_zabbix.client.username');
         $this->zabbix_rest_endpoint_pass = $parameter->get('flowti_zabbix.client.password');
         $this->zabbix_rest_endpoint = $parameter->get('flowti_zabbix.client.host');
@@ -30,7 +29,6 @@ class FlowtiZabbixClient
 
     public function __destruct()
     {
-        $this->logger->info('Logout');
         $this->logOut();
     }
 
