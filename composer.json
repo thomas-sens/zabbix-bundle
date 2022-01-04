@@ -5,7 +5,8 @@
     "require": {
         "php": ">=7.4",
         "symfony/framework-bundle": "^5.2",
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.4",
+        "symfony/monolog-bundle": "^3.7"
     },
     "autoload": {
         "psr-4": {
