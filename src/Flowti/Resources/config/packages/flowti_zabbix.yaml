@@ -1,0 +1,4 @@
+flowti_zabbix:
+  zabbix_rest_endpoint: "https://endpoint"
+  zabbix_rest_endpoint_user: "user"
+  zabbix_rest_endpoint_pass: "pass"
