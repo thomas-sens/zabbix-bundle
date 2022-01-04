@@ -7,16 +7,18 @@
 
     class FlowtiZabbixClient
     {
-        protected $httpClient;
-        protected $zabbixCredentialsHost;
-        protected $zabbixCredentialsUsername;
-        protected $zabbixCredentialsPassword;
+        protected $zbClient;
+        protected $zabbix_rest_endpoint_user;
+        protected $zabbix_rest_endpoint_pass;
+        protected $container;
+        protected $token_auth;
+        protected $zabbix_rest_endpoint;
 
         public function __construct(ContainerInterface $container)
         {
-            $this->container  = $container;
+            $this->container = $container;
             $this->zbClient = new GClient(['verify' => false]);
-            $this->token_auth = $this->logIn();
+            $this->token_auth = $this->logIn(); 
             $this->grava_log("Login\n" ,'endpoint-zabbix.log');
 
             $this->zabbix_rest_endpoint_user = $this->container->getParameter('flowti_zabbix.client.username');
