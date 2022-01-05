@@ -3,10 +3,10 @@
     "description": "Zabbix integration for Symfony",
     "type": "symfony-bundle",
     "require": {
-        "php": ">=7.4",
-        "symfony/framework-bundle": "^5.2",
-        "guzzlehttp/guzzle": "^7.4",
-        "symfony/monolog-bundle": "^3.7"
+        "php": ">=7.0",
+        "symfony/framework-bundle": ">=4.0",
+        "guzzlehttp/guzzle": ">=6.3",
+        "symfony/monolog-bundle": ">=3.1"
     },
     "autoload": {
         "psr-4": {
