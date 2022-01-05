@@ -1,12 +1,17 @@
 # ZabbixBundle
 Zabbix integration for Symfony
 
-Para gerar o arquivo de parâmetros:
+Instalation:
+```
+compose require flowti/zabbix-bundle 
+```
+
+Generate a parameters file:
 ```
 php bin/console config:dump-reference FlowtiZabbixBundle > config/packages/flowti_zabbix.yaml
 ```
 
-Configuração dos parâmetros, exemplo: (src/config/packages/flowti_zabbix.yaml)
+Example: src/config/packages/flowti_zabbix.yaml
 ```
 flowti_zabbix:
     client:
@@ -15,12 +20,12 @@ flowti_zabbix:
         password: "pass"
 ```
 
-Exemplo de chamada:
+Call Example:
 ```
 /**
-* @Route("/zabbix", name="teste-zabbix")
+* @Route("/zabbix", name="zabbix-test")
 */
-public function testeZabbix(FlowtiZabbixClient $zabbix)
+public function zabbixText(FlowtiZabbixClient $zabbix)
 {
     dump($zabbix->getTrigger(629272));
     dd($zabbix->getHost('srvdata02rj-q01147'));
