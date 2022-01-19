@@ -1,9 +1,8 @@
 <?php
 
-    namespace Flowti\ZabbixBundle\Service;
+namespace Flowti\ZabbixBundle\Service;
 
-    use Symfony\Component\DependencyInjection\ContainerInterface;
-    use GuzzleHttp\Client as GClient;
+use GuzzleHttp\Client as GClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -18,10 +17,11 @@ class FlowtiZabbixClient
 
     public function __construct(ParameterBagInterface $parameter, LoggerInterface $logger)
     {
+        $parameters = $parameter->all();
         $this->logger = $logger;
-        $this->zabbix_rest_endpoint_user = $parameter->get('flowti_zabbix.client.username');
-        $this->zabbix_rest_endpoint_pass = $parameter->get('flowti_zabbix.client.password');
-        $this->zabbix_rest_endpoint = $parameter->get('flowti_zabbix.client.host');
+        $this->zabbix_rest_endpoint_user = $parameters['flowti_zabbix.client.username'];
+        $this->zabbix_rest_endpoint_pass = $parameters['flowti_zabbix.client.password'];
+        $this->zabbix_rest_endpoint = $parameters['flowti_zabbix.client.host'];
         $this->zbClient = new GClient(['verify' => false]);
         $this->token_auth = $this->logIn(); 
         

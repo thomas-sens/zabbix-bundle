@@ -78,7 +78,7 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-/.env.dev
+/.env.test
 
 ###> phpunit/phpunit ###
 /phpunit.xml
