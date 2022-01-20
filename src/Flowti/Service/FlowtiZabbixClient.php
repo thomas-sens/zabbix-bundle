@@ -101,6 +101,26 @@ class FlowtiZabbixClient
         }
     }
 
+    public function getHosts() {
+        if ($this->token_auth) {
+            $response = $this->callEndpoint('host.get', 
+            '{
+                "output": ["hostid","description"]
+            }');
+            return $response;
+        }
+    }
+
+    public function getApplications() {
+        if ($this->token_auth) {
+            $response = $this->callEndpoint('application.get', 
+            '{
+                "output": ["applicationid","name"]
+            }');
+            return $response;
+        }
+    }
+
     public function getHostGroups() {
         if ($this->token_auth) {
             $response = $this->callEndpoint('hostgroup.get', 
