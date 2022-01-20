@@ -105,7 +105,7 @@ class FlowtiZabbixClient
         if ($this->token_auth) {
             $response = $this->callEndpoint('host.get', 
             '{
-                "output": ["hostid","description"]
+                "output": ["hostid","name","description"]
             }');
             return $response;
         }
