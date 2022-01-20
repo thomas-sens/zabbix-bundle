@@ -112,11 +112,12 @@ class FlowtiZabbixClient
         }
     }
 
-    public function getApplications() {
+    public function getApplications($hostid) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('application.get', 
             '{
-                "output": ["applicationid","name"]
+                "output": ["applicationid","name"],
+                "hostids": ["'.$hostid.'"]
             }');
             return $response;
         }
