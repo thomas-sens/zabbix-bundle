@@ -101,6 +101,18 @@ class FlowtiZabbixClient
         }
     }
 
+    public function getHostGroups() {
+        if ($this->token_auth) {
+            $response = $this->callEndpoint('hostgroup.get', 
+            '{
+                "output": ["groupid","name"],
+                "real_hosts": 1
+            }');
+
+            return $response;
+        }
+    }
+
     public function getEvent(String $eventid) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('event.get', 

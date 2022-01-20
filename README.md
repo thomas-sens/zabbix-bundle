@@ -3,7 +3,7 @@ Zabbix integration for Symfony
 
 Instalation:
 ```
-compose require flowti/zabbix-bundle 
+composer require flowti/zabbix-bundle 
 ```
 
 Generate a parameters file:
