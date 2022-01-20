@@ -105,12 +105,8 @@ class FlowtiZabbixClient
         if ($this->token_auth) {
             $response = $this->callEndpoint('host.get', 
             '{
-                "output": ["hostid","name","description"]
-                "filter": {
-                    "groupid": [
-                        "'.$groupid.'"
-                    ]
-                },
+                "output": ["hostid","name","description"],
+                "groupids": ["'.$groupid.'"]
             }');
             return $response;
         }

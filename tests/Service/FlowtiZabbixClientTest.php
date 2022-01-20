@@ -53,6 +53,15 @@ class FlowtiZabbixClientTest extends TestCase
         $this->assertEquals('1109', $ret[0]['groupid']);
     }
 
+    public function testGetHosts()
+    {
+        $ret = $this->client->getHosts('729');
+        $this->assertEquals('11108', $ret[0]['hostid']);
+    }
+
+
+    
+
 
     
 }
