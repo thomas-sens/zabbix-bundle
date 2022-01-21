@@ -198,11 +198,11 @@ class FlowtiZabbixClient
         $z_login_data = array('name' => $this->zabbix_rest_endpoint_user, 'password' => $this->zabbix_rest_endpoint_pass, 'enter' => "Sign in");
 
         // file names
-        if (!file_exists('public/zabbix')) {
-            mkdir('public/zabbix', 0777, true);
+        if (!file_exists('zabbix')) {
+            mkdir('zabbix', 0777, true);
         }
-        $filename_cookie = "public/zabbix/zabbix_cookie_" . $itemid . ".txt";
-        $image_name = "public/zabbix/zabbix_graph_" . $itemid . ".png";
+        $filename_cookie = "zabbix/zabbix_cookie_" . $itemid . ".txt";
+        $image_name = "zabbix/zabbix_graph_" . $itemid . ".png";
 
         //setup curl
         $ch = curl_init();

@@ -32,7 +32,7 @@ class FlowtiZabbixClientTest extends TestCase
     public function testGetChart()
     {
         $ret = $this->client->getChart(1914165);
-        $this->assertEquals('public/zabbix/zabbix_graph_1914165.png', $ret);
+        $this->assertEquals('zabbix/zabbix_graph_1914165.png', $ret);
     }
 
     public function testGetTrigger()

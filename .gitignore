@@ -87,4 +87,4 @@
 symfony.lock
 composer.lock
 
-/public/zabbix/*
+/zabbix/*
