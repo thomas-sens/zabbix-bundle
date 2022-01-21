@@ -164,7 +164,10 @@ class FlowtiZabbixClient
                 "output": "extend",
                 "hostids": '.json_encode($hostids).',
                 "applicationids": '.json_encode($applicationids).',
-                "webitems": 1
+                "webitems": 1,
+                "filter": {
+                    "status": "0"
+                }
             }');
             return $response;
         }

@@ -68,7 +68,7 @@ class FlowtiZabbixClientTest extends TestCase
     public function testGetItems()
     {
         $ret = $this->client->getItems([11124],[21049]);
-        $this->assertEquals('180517', $ret[0]['itemid']);
+        $this->assertEquals('180519', $ret[0]['itemid']);
     }
     
 
