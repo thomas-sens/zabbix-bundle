@@ -31,7 +31,7 @@ class FlowtiZabbixClientTest extends TestCase
 
     public function testGetTrigger()
     {
-        $ret = $this->client->getTrigger(629272);
+        $ret = $this->client->getTrigger([629272]);
         $this->assertEquals('629272', $ret[0]['triggerid']);
     }
 
@@ -43,7 +43,7 @@ class FlowtiZabbixClientTest extends TestCase
 
     public function testGetEvent()
     {
-        $ret = $this->client->getEvent(91217179);
+        $ret = $this->client->getEvent([91217179]);
         $this->assertEquals('91217179', $ret[0]['eventid']);
     }
 
@@ -55,17 +55,22 @@ class FlowtiZabbixClientTest extends TestCase
 
     public function testGetHosts()
     {
-        $ret = $this->client->getHosts('729');
+        $ret = $this->client->getHosts([729]);
         $this->assertEquals('11108', $ret[0]['hostid']);
     }
 
     public function testGetApplications()
     {
-        $ret = $this->client->getApplications('11124');
+        $ret = $this->client->getApplications([11124]);
         $this->assertEquals('21049', $ret[0]['applicationid']);
     }
     
-
+    public function testGetItems()
+    {
+        $ret = $this->client->getItems([11124],[21049]);
+        $this->assertEquals('180517', $ret[0]['itemid']);
+    }
+    
 
     
 }

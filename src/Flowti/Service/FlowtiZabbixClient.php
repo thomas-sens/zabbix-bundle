@@ -73,11 +73,11 @@ class FlowtiZabbixClient
         }
     }
 
-    public function msgZabbix($chamado, $event_id) {
+    public function msgZabbix(String $chamado, Array $eventids) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('event.acknowledge', 
             '{
-                "eventids": "'.$event_id.'",
+                "eventids": '.json_encode($eventids).',
                 "action": "4",
                 "message": "Qualitor: '.$chamado.'"
             }');
@@ -101,23 +101,23 @@ class FlowtiZabbixClient
         }
     }
 
-    public function getHosts(String $groupid) {
+    public function getHosts(Array $groupids) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('host.get', 
             '{
                 "output": ["hostid","name","description"],
-                "groupids": ["'.$groupid.'"]
+                "groupids": '.json_encode($groupids).'
             }');
             return $response;
         }
     }
 
-    public function getApplications($hostid) {
+    public function getApplications(Array $hostids) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('application.get', 
             '{
                 "output": ["applicationid","name"],
-                "hostids": ["'.$hostid.'"]
+                "hostids": '.json_encode($hostids).'
             }');
             return $response;
         }
@@ -135,23 +135,35 @@ class FlowtiZabbixClient
         }
     }
 
-    public function getEvent(String $eventid) {
+    public function getEvent(Array $eventids) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('event.get', 
             '{
                 "output": "extend",
-                "eventids": "'.$eventid.'"
+                "eventids": '.json_encode($eventids).'
             }');
             return $response;
         }
     }
 
-    public function getTrigger(String $triggerid) {
+    public function getTrigger(Array $triggerids) {
         if ($this->token_auth) {
             $response = $this->callEndpoint('trigger.get', 
             '{
                 "output": "extend",
-                "triggerids": "'.$triggerid.'"
+                "triggerids": '.json_encode($triggerids).'
+            }');
+            return $response;
+        }
+    }
+
+    public function getItems(Array $hostids, Array $applicationids) {
+        if ($this->token_auth) {
+            $response = $this->callEndpoint('item.get', 
+            '{
+                "output": "extend",
+                "hostids": '.json_encode($hostids).',
+                "applicationids": '.json_encode($applicationids).'
             }');
             return $response;
         }
