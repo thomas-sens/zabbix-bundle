@@ -29,6 +29,12 @@ class FlowtiZabbixClientTest extends TestCase
         $this->client = new FlowtiZabbixClient($parameterBagInterface, $logger);
     }
 
+    public function testGetChart()
+    {
+        $ret = $this->client->getChart(1914165);
+        $this->assertEquals('public/zabbix/zabbix_graph_1914165.png', $ret);
+    }
+
     public function testGetTrigger()
     {
         $ret = $this->client->getTrigger([629272]);
@@ -70,7 +76,5 @@ class FlowtiZabbixClientTest extends TestCase
         $ret = $this->client->getItems([11124],[21049]);
         $this->assertEquals('180519', $ret[0]['itemid']);
     }
-    
-
     
 }

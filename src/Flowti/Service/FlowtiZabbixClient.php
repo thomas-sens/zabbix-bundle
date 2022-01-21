@@ -48,7 +48,7 @@ class FlowtiZabbixClient
             'http_errors' => false,
         ];
 
-        $response = $this->zbClient->request('POST', $this->zabbix_rest_endpoint, $input);
+        $response = $this->zbClient->request('POST', $this->zabbix_rest_endpoint.'api_jsonrpc.php', $input);
 
         $ret = json_decode($response->getBody()->getContents(),true);
 
@@ -171,5 +171,63 @@ class FlowtiZabbixClient
             }');
             return $response;
         }
+    }
+
+    public function getItem(Array $itemids) {
+        if ($this->token_auth) {
+            $response = $this->callEndpoint('item.get', 
+            '{
+                "output": ["itemid","hostid","name","key_","value_type","valuemapid","history","trends"],
+                "selectHosts": ["name"],
+                "itemids": '.json_encode($itemids).',
+                "webitems": 1
+            }');
+            return $response;
+        }
+    }
+
+    public function getChart($itemid) {
+
+        //NON CONFIGURABLE
+        $z_url_index = $this->zabbix_rest_endpoint . "zabbix/index.php";
+        $z_url_graph = $this->zabbix_rest_endpoint . "zabbix/chart.php";
+
+        // Zabbix 1.8
+        // $z_login_data  = "name=" .$z_user ."&password=" .$z_pass ."&enter=Enter";
+        // Zabbix 2.0
+        $z_login_data = array('name' => $this->zabbix_rest_endpoint_user, 'password' => $this->zabbix_rest_endpoint_pass, 'enter' => "Sign in");
+
+        // file names
+        if (!file_exists('public/zabbix')) {
+            mkdir('public/zabbix', 0777, true);
+        }
+        $filename_cookie = "public/zabbix/zabbix_cookie_" . $itemid . ".txt";
+        $image_name = "public/zabbix/zabbix_graph_" . $itemid . ".png";
+
+        //setup curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $z_url_index);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $z_login_data);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $filename_cookie);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $filename_cookie);
+        // login
+        curl_exec($ch);
+        // get graph
+        curl_setopt($ch, CURLOPT_URL, $z_url_graph . "?from=now-1h&to=now&itemids[0]=$itemid&width=1177&height=200");
+        $output = curl_exec($ch);
+        curl_close($ch);
+        // delete cookie
+        unlink($filename_cookie);
+
+        $fp = fopen($image_name, 'w');
+        fwrite($fp, $output);
+        fclose($fp);
+
+        return $image_name;
     }
 }
