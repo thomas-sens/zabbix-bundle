@@ -15,7 +15,7 @@ Example: src/config/packages/flowti_zabbix.yaml
 ```
 flowti_zabbix:
     client:
-        host: "https://seu-servidor/api_jsonrpc.php"
+        host: "https://seu-servidor"
         username: "user"
         password: "pass"
 ```

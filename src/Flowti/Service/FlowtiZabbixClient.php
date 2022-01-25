@@ -48,7 +48,7 @@ class FlowtiZabbixClient
             'http_errors' => false,
         ];
 
-        $response = $this->zbClient->request('POST', $this->zabbix_rest_endpoint.'api_jsonrpc.php', $input);
+        $response = $this->zbClient->request('POST', $this->zabbix_rest_endpoint.'/api_jsonrpc.php', $input);
 
         $ret = json_decode($response->getBody()->getContents(),true);
 
@@ -189,8 +189,8 @@ class FlowtiZabbixClient
     public function getChart($itemid) {
 
         //NON CONFIGURABLE
-        $z_url_index = $this->zabbix_rest_endpoint . "zabbix/index.php";
-        $z_url_graph = $this->zabbix_rest_endpoint . "zabbix/chart.php";
+        $z_url_index = $this->zabbix_rest_endpoint . "/zabbix/index.php";
+        $z_url_graph = $this->zabbix_rest_endpoint . "/zabbix/chart.php";
 
         // Zabbix 1.8
         // $z_login_data  = "name=" .$z_user ."&password=" .$z_pass ."&enter=Enter";
