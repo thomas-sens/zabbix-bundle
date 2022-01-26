@@ -186,7 +186,7 @@ class FlowtiZabbixClient
         }
     }
 
-    public function getChart(Array $itemid, String $from = 'now-1h', String $to = 'now', $width = '1080', $height = '200') {
+    public function getChart(Array $itemid, int $width = 1080, int $height = 200, String $from = 'now-1h', String $to = 'now') {
 
         //NON CONFIGURABLE
         $z_url_index = $this->zabbix_rest_endpoint . "/zabbix/index.php";
@@ -222,7 +222,9 @@ class FlowtiZabbixClient
         foreach ($itemid as $ind => $item) {
             $strItems .= "&itemids[$ind]=$item";
         }
-        curl_setopt($ch, CURLOPT_URL, $z_url_graph . "?from=$from&to=$to$strItems&width=$width&height=$height");
+        $endereco =  $z_url_graph . "?from=$from&to=$to$strItems&width=$width&height=$height";
+        dd($endereco);
+        curl_setopt($ch, CURLOPT_URL, $endereco);
         $output = curl_exec($ch);
         curl_close($ch);
         // delete cookie
