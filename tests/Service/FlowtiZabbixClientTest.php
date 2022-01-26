@@ -31,8 +31,8 @@ class FlowtiZabbixClientTest extends TestCase
 
     public function testGetChart()
     {
-        $ret = $this->client->getChart([179745,179746,179750]);
-        $this->assertEquals('zabbix/zabbix_graph_179745.png', $ret);
+        $ret = $this->client->getChart([179745,179746,179750], 1080, 200, 'now-24h', 'now');
+        $this->assertFileExists($ret);
     }
 
     public function testGetTrigger()
@@ -73,9 +73,8 @@ class FlowtiZabbixClientTest extends TestCase
     
     public function testGetItems()
     {
-        /* teste */
         $ret = $this->client->getItems([11124],[21049]);
         $this->assertEquals('180519', $ret[0]['itemid']);
     }
-    
+
 }

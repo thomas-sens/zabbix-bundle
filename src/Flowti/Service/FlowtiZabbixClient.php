@@ -201,8 +201,8 @@ class FlowtiZabbixClient
         if (!file_exists('zabbix')) {
             mkdir('zabbix', 0777, true);
         }
-        $filename_cookie = "zabbix/zabbix_cookie_" . $itemid[0] . ".txt";
-        $image_name = "zabbix/zabbix_graph_" . $itemid[0] . ".png";
+        $filename_cookie = "zabbix/zabbix_cookie_" . $itemid[0] ."_". date('YmdHis') . ".txt";
+        $image_name = "zabbix/zabbix_graph_" . $itemid[0] ."_". date('YmdHis') . ".png";
 
         //setup curl
         $ch = curl_init();
