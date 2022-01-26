@@ -31,7 +31,7 @@ class FlowtiZabbixClientTest extends TestCase
 
     public function testGetChart()
     {
-        $ret = $this->client->getChart([179745,179746,179750], 1080, 200, 'now-24h', 'now');
+        $ret = $this->client->getChart([179745,179746,179750], 1080, 200, 'now-3M', 'now');
         $this->assertFileExists($ret);
     }
 
