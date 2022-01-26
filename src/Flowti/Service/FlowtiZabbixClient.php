@@ -223,7 +223,6 @@ class FlowtiZabbixClient
             $strItems .= "&itemids[$ind]=$item";
         }
         $endereco =  $z_url_graph . "?from=$from&to=$to$strItems&width=$width&height=$height";
-        dd($endereco);
         curl_setopt($ch, CURLOPT_URL, $endereco);
         $output = curl_exec($ch);
         curl_close($ch);
