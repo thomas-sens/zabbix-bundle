@@ -186,7 +186,7 @@ class FlowtiZabbixClient
         }
     }
 
-    public function getChart($itemid) {
+    public function getChart(Array $itemid, String $from = 'now-1h', String $to = 'now', $width = '1080', $height = '200') {
 
         //NON CONFIGURABLE
         $z_url_index = $this->zabbix_rest_endpoint . "/zabbix/index.php";
@@ -201,8 +201,8 @@ class FlowtiZabbixClient
         if (!file_exists('zabbix')) {
             mkdir('zabbix', 0777, true);
         }
-        $filename_cookie = "zabbix/zabbix_cookie_" . $itemid . ".txt";
-        $image_name = "zabbix/zabbix_graph_" . $itemid . ".png";
+        $filename_cookie = "zabbix/zabbix_cookie_" . $itemid[0] . ".txt";
+        $image_name = "zabbix/zabbix_graph_" . $itemid[0] . ".png";
 
         //setup curl
         $ch = curl_init();
@@ -218,7 +218,11 @@ class FlowtiZabbixClient
         // login
         curl_exec($ch);
         // get graph
-        curl_setopt($ch, CURLOPT_URL, $z_url_graph . "?from=now-1h&to=now&itemids[0]=$itemid&width=1177&height=200");
+        $strItems = '';
+        foreach ($itemid as $ind => $item) {
+            $strItems .= "&itemids[$ind]=$item";
+        }
+        curl_setopt($ch, CURLOPT_URL, $z_url_graph . "?from=$from&to=$to$strItems&width=$width&height=$height");
         $output = curl_exec($ch);
         curl_close($ch);
         // delete cookie
