@@ -140,6 +140,7 @@ class FlowtiZabbixClient
             $response = $this->callEndpoint('event.get', 
             '{
                 "output": "extend",
+                "selectHosts": "extend",
                 "eventids": '.json_encode($eventids).'
             }');
             return $response;
@@ -151,6 +152,7 @@ class FlowtiZabbixClient
             $response = $this->callEndpoint('trigger.get', 
             '{
                 "output": "extend",
+                "selectItems": "extend",
                 "triggerids": '.json_encode($triggerids).'
             }');
             return $response;
