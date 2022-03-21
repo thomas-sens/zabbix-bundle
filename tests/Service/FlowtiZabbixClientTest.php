@@ -29,6 +29,13 @@ class FlowtiZabbixClientTest extends TestCase
         $this->client = new FlowtiZabbixClient($parameterBagInterface, $logger);
     }
 
+    public function testGetHistory()
+    {
+        $ret = $this->client->getHistory([1702472], 15, 1, 100);
+        $this->assertEquals('1702472', $ret[0]['itemid']);
+    }
+/*
+
     public function testGetChart()
     {
         $ret = $this->client->getChart([179745,179746,179750], 1080, 200, 'now-3M', 'now');
@@ -76,5 +83,5 @@ class FlowtiZabbixClientTest extends TestCase
         $ret = $this->client->getItems([11124],[21049]);
         $this->assertEquals('180519', $ret[0]['itemid']);
     }
-
+*/
 }

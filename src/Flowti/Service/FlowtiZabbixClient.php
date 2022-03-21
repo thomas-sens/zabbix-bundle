@@ -238,4 +238,25 @@ class FlowtiZabbixClient
 
         return $image_name;
     }
+
+    public function getHistory(Array $itemids, int $days = 1, $value_type = 0, $limit = 50) {
+        if ($this->token_auth) {
+            $dateTo = new \DateTime();
+            $dateFrom = new \DateTime();
+            $dateFrom->sub(new \DateInterval('P'.$days.'D'));
+
+            $response = $this->callEndpoint('history.get', 
+            '{
+                "output": "extend",
+                "itemids": '.json_encode($itemids).',
+                "history": '.$value_type.',
+                "sortfield": "clock",
+                "sortorder": "DESC",
+                "time_from": '.$dateFrom->getTimestamp().',
+                "time_till": '.$dateTo->getTimestamp().',
+                "limit": '.$limit.'
+            }');
+            return $response;
+        }
+    }
 }
