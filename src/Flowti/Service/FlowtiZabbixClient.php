@@ -2,16 +2,24 @@
 
 namespace Flowti\ZabbixBundle\Service;
 
+use Flowti\ZabbixBundle\Model\Application;
+use Flowti\ZabbixBundle\Model\Chart;
+use Flowti\ZabbixBundle\Model\Event;
+use Flowti\ZabbixBundle\Model\History;
+use Flowti\ZabbixBundle\Model\Host;
+use Flowti\ZabbixBundle\Model\HostGroup;
+use Flowti\ZabbixBundle\Model\Item;
+use Flowti\ZabbixBundle\Model\Trigger;
 use GuzzleHttp\Client as GClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class FlowtiZabbixClient
 {
+    private $token_auth;
     private $zbClient;
     private $zabbix_rest_endpoint_user;
     private $zabbix_rest_endpoint_pass;
-    private $token_auth;
     private $logger;
     private $zabbix_rest_endpoint;
 
@@ -24,7 +32,26 @@ class FlowtiZabbixClient
         $this->zabbix_rest_endpoint = $parameters['flowti_zabbix.client.host'];
         $this->zbClient = new GClient(['verify' => false]);
         $this->token_auth = $this->logIn(); 
-        
+    }
+
+    public function isAutenticated()
+    {
+        return $this->token_auth;
+    }
+
+    public function getZabbixRestEnpointUser()
+    {
+        return $this->zabbix_rest_endpoint_user;
+    }
+
+    public function getZabbixRestEnpointPass()
+    {
+        return $this->zabbix_rest_endpoint_pass;
+    }
+
+    public function getZabbixRestEnpoint()
+    {
+        return $this->zabbix_rest_endpoint;
     }
 
     public function __destruct()
@@ -32,7 +59,7 @@ class FlowtiZabbixClient
         $this->logOut();
     }
 
-    private function callEndpoint($method, $params) {
+    public function callEndpoint($method, $params) {
         $authToken = '"id": 0';
         $this->logger->info($method);
         if ($this->token_auth) {
@@ -73,190 +100,148 @@ class FlowtiZabbixClient
         }
     }
 
-    public function msgZabbix(String $chamado, Array $eventids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('event.acknowledge', 
-            '{
-                "eventids": '.json_encode($eventids).',
-                "action": "4",
-                "message": "Qualitor: '.$chamado.'"
-            }');
-            return $response;
-        }
-    }
 
-    public function getHost(String $hostname) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('host.get', 
-            '{
-                "output": ["hostid","description"],
-                "filter": {
-                    "host": [
-                        "'.$hostname.'"
-                    ]
-                },
-                "selectInventory": ["os"]
-            }');
-            return $response;
-        }
-    }
 
-    public function getHosts(Array $groupids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('host.get', 
-            '{
-                "output": ["hostid","name","description"],
-                "groupids": '.json_encode($groupids).'
-            }');
-            return $response;
-        }
-    }
 
-    public function getApplications(Array $hostids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('application.get', 
-            '{
-                "output": ["applicationid","name"],
-                "hostids": '.json_encode($hostids).'
-            }');
-            return $response;
-        }
-    }
-
-    public function getHostGroups() {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('hostgroup.get', 
-            '{
-                "output": ["groupid","name"],
-                "real_hosts": 1
-            }');
-
-            return $response;
-        }
-    }
-
-    public function getEvent(Array $eventids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('event.get', 
-            '{
-                "output": "extend",
-                "selectHosts": "extend",
-                "eventids": '.json_encode($eventids).'
-            }');
-            return $response;
-        }
-    }
-
-    public function getTrigger(Array $triggerids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('trigger.get', 
-            '{
-                "output": "extend",
-                "selectItems": "extend",
-                "triggerids": '.json_encode($triggerids).'
-            }');
-            return $response;
-        }
-    }
-
-    public function getItems(Array $hostids, Array $applicationids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('item.get', 
-            '{
-                "output": "extend",
-                "hostids": '.json_encode($hostids).',
-                "applicationids": '.json_encode($applicationids).',
-                "webitems": 1,
-                "filter": {
-                    "status": "0"
-                }
-            }');
-            return $response;
-        }
-    }
-
-    public function getItem(Array $itemids) {
-        if ($this->token_auth) {
-            $response = $this->callEndpoint('item.get', 
-            '{
-                "output": ["itemid","hostid","name","key_","value_type","valuemapid","history","trends"],
-                "selectHosts": ["name"],
-                "itemids": '.json_encode($itemids).',
-                "webitems": 1
-            }');
-            return $response;
-        }
-    }
-
+    /**
+     * @deprecated use new Chart() to get(...)
+     */
     public function getChart(Array $itemid, int $width = 1080, int $height = 200, String $from = 'now-1h', String $to = 'now') {
-
-        //NON CONFIGURABLE
-        $z_url_index = $this->zabbix_rest_endpoint . "/zabbix/index.php";
-        $z_url_graph = $this->zabbix_rest_endpoint . "/zabbix/chart.php";
-
-        // Zabbix 1.8
-        // $z_login_data  = "name=" .$z_user ."&password=" .$z_pass ."&enter=Enter";
-        // Zabbix 2.0
-        $z_login_data = array('name' => $this->zabbix_rest_endpoint_user, 'password' => $this->zabbix_rest_endpoint_pass, 'enter' => "Sign in");
-
-        // file names
-        if (!file_exists('zabbix')) {
-            mkdir('zabbix', 0777, true);
-        }
-        $filename_cookie = "zabbix/zabbix_cookie_" . $itemid[0] ."_". date('YmdHis') . ".txt";
-        $image_name = "zabbix/zabbix_graph_" . $itemid[0] ."_". date('YmdHis') . ".png";
-
-        //setup curl
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $z_url_index);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $z_login_data);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $filename_cookie);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $filename_cookie);
-        // login
-        curl_exec($ch);
-        // get graph
-        $strItems = '';
-        foreach ($itemid as $ind => $item) {
-            $strItems .= "&itemids[$ind]=$item";
-        }
-        $endereco =  $z_url_graph . "?from=$from&to=$to$strItems&type=0&profileIdx=web.item.graph.filter&batch=0&width=$width&height=$height";
-        //dd($endereco);
-        curl_setopt($ch, CURLOPT_URL, $endereco);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        // delete cookie
-        unlink($filename_cookie);
-
-        $fp = fopen($image_name, 'w');
-        fwrite($fp, $output);
-        fclose($fp);
-
-        return $image_name;
+        $chart = new Chart($this);
+        return $chart->get($itemid, $width, $height, $from, $to);
     }
 
-    public function getHistory(Array $itemids, int $days = 1, $value_type = 0, $limit = 50) {
-        if ($this->token_auth) {
-            $dateTo = new \DateTime();
-            $dateFrom = new \DateTime();
-            $dateFrom->sub(new \DateInterval('P'.$days.'D'));
+    /**
+     * @deprecated use new Event() to acknowledge($params)
+     */
+    public function msgZabbix(String $chamado, Array $eventids) {
+        $event = new Event($this);
+        return $event->acknowledge('{
+            "eventids": '.json_encode($eventids).',
+            "action": "4",
+            "message": "Qualitor: '.$chamado.'"
+        }');
+    }
 
-            $response = $this->callEndpoint('history.get', 
-            '{
-                "output": "extend",
-                "itemids": '.json_encode($itemids).',
-                "history": '.$value_type.',
-                "sortfield": "clock",
-                "sortorder": "DESC",
-                "time_from": '.$dateFrom->getTimestamp().',
-                "time_till": '.$dateTo->getTimestamp().',
-                "limit": '.$limit.'
-            }');
-            return $response;
-        }
+    /**
+     * @deprecated use new Host() to get($params)
+     */
+    public function getHost(String $hostname) {
+        $host = new Host($this);
+        return $host->get('{
+            "output": ["hostid","description"],
+            "filter": {
+                "host": [
+                    "'.$hostname.'"
+                ]
+            },
+            "selectInventory": ["os"]
+        }');
+    }
+
+    /**
+     * @deprecated use new Host() to get($params)
+     */
+    public function getHosts(Array $groupids) {
+        $host = new Host($this);
+        return $host->get('{
+            "output": ["hostid","name","description"],
+            "groupids": '.json_encode($groupids).'
+        }'); 
+    }
+
+    /**
+     * @deprecated use new HostGroup() to get($params)
+     */
+    public function getHostGroups() {
+        $hostGroup = new HostGroup($this);
+        return $hostGroup->get('{
+            "output": ["groupid","name"],
+            "real_hosts": 1
+        }');
+    }
+
+    /**
+     * @deprecated use new Application() to get($params)
+     */
+    public function getApplications(Array $hostids) {
+        $application = new Application($this);
+        return $application->get('{
+            "output": ["applicationid","name"],
+            "hostids": '.json_encode($hostids).'
+        }');
+    }
+
+    /**
+     * @deprecated use new Event() to get($params)
+     */
+    public function getEvent(Array $eventids) {
+        $event = new Event($this);
+        return $event->get('{
+            "output": "extend",
+            "selectHosts": "extend",
+            "eventids": '.json_encode($eventids).'
+        }');
+    }
+
+    /**
+     * @deprecated use new Trigger() to get($params)
+     */
+    public function getTrigger(Array $triggerids) {
+        $trigger = new Trigger($this);
+        return $trigger->get('{
+            "output": "extend",
+            "selectItems": "extend",
+            "triggerids": '.json_encode($triggerids).'
+        }');
+    }
+
+    /**
+     * @deprecated use new Item() to get($params)
+     */
+    public function getItems(Array $hostids, Array $applicationids) {
+        $item = new Item($this);
+        return $item->get('{
+            "output": "extend",
+            "hostids": '.json_encode($hostids).',
+            "applicationids": '.json_encode($applicationids).',
+            "webitems": 1,
+            "filter": {
+                "status": "0"
+            }
+        }');
+    }
+
+    /**
+     * @deprecated use new Item() to get($params)
+     */
+    public function getItem(Array $itemids) {
+        $item = new Item($this);
+        return $item->get('{
+            "output": ["itemid","hostid","name","key_","value_type","valuemapid","history","trends"],
+            "selectHosts": ["name"],
+            "itemids": '.json_encode($itemids).',
+            "webitems": 1
+        }');
+    }
+
+    /**
+     * @deprecated use new History() to get($params)
+     */
+    public function getHistory(Array $itemids, int $days = 1, $value_type = 0, $limit = 50) {
+        $history = new History($this);
+        $dateTo = new \DateTime();
+        $dateFrom = new \DateTime();
+        $dateFrom->sub(new \DateInterval('P'.$days.'D'));
+        return $history->get('{
+            "output": "extend",
+            "itemids": '.json_encode($itemids).',
+            "history": '.$value_type.',
+            "sortfield": "clock",
+            "sortorder": "DESC",
+            "time_from": '.$dateFrom->getTimestamp().',
+            "time_till": '.$dateTo->getTimestamp().',
+            "limit": '.$limit.'
+        }');
     }
 }
