@@ -1,6 +1,8 @@
 # ZabbixBundle
 Zabbix integration for Symfony
 
+Obtaining monitoring data captured by Zabbix in a simple way, with easy configuration, requiring only the host name to return a list of the server's monitoring data.
+
 Instalation:
 ```
 composer require flowti/zabbix-bundle 
